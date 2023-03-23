@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d8a7e9f7d7932418ee5b5a1ec41f32, type: 3}
+  m_Name: AudioClipsData
+  m_EditorClassIdentifier: 
+  startPressed: {fileID: 8300000, guid: cc71f4a8001847744a9aac0dfb2dcb24, type: 3}
+  asteroidDestroy: {fileID: 8300000, guid: 960c546c97ef3ef438ba3a3c518463fa, type: 3}
+  playerExplode: {fileID: 8300000, guid: df0cdccfbdb4b254ebed6848d25dcabc, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: 5130e26d5f5b20c4a9334577586ceed2, type: 3}
