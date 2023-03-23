@@ -23,13 +23,12 @@ public class Fire : MonoBehaviour
     private float nextFire = 0.0f;
     private int burstCount = 3;
     private bool isBurstActive = false;
-    private bool canFire = false;
 
     private WeaponDataScriptableObject weaponData;
 
     void Start()
     {
-        GameManager.Instance.GameStarted += GameStarted;
+        GameManager.Instance.OnFireWeapon += CheckAndFire;
         weaponData = GameManager.Instance.weaponDataSO;
         burstCount = weaponData.burstCount;
         fireRate = weaponData.fireRate;
@@ -37,16 +36,11 @@ public class Fire : MonoBehaviour
         isBurstActive = weaponData.burst;
 
         bulletsPool = GetComponent<BulletsPool>();
-        bulletsPool.Initialize();
+        bulletsPool.InitializePool();
         player = GetComponent<Player>();
     }
 
-    private void GameStarted(bool gameStarted)
-    {
-        canFire = gameStarted;
-    }
-
-    void Update()
+    void CheckAndFire()
     {
         if (!bulletsPool.isInitialised) return;
 
@@ -72,6 +66,7 @@ public class Fire : MonoBehaviour
             int spread = 10;
             for (int i = 0; i < burstCount; i++)
             {
+                //Adds rotation to the projectiles for spread in burst shot
                 float addedOffset = (i - (burstCount / 2)) * spread;
                 newRot = Quaternion.Euler(gameObject.transform.localEulerAngles.x,
                 gameObject.transform.localEulerAngles.y,
@@ -85,13 +80,22 @@ public class Fire : MonoBehaviour
         AudioManager.Instance.PlaySFX(sound, soundVolume);
     }
 
+    /// <summary>
+    /// Get the bullet object from the pool and shoot
+    /// </summary>
+    /// <param name="roation"></param>
     void FireSingleWeapon(Quaternion roation)
     {
         GameObject weaponGO = bulletsPool.GetGameObject();
         weaponGO.transform.position = bulletSpawnerTransform.position;
         weaponGO.transform.rotation = roation;
 
-        weaponGO.GetComponent<Bullet>().Init(bulletsPool, 1, transform, 3);
+        weaponGO.GetComponent<Bullet>().Init(bulletsPool, weaponData.damage, transform, 3);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnFireWeapon -= CheckAndFire;
     }
 }
 

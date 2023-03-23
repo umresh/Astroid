@@ -16,27 +16,38 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TMPro.TextMeshProUGUI playerLives;
     [SerializeField]
+    private TMPro.TextMeshProUGUI currentLevel;
+    [SerializeField]
     private TMPro.TextMeshProUGUI gameEndedScore;
 
 
-    public void UpdateScore(int scoreValue){
-        score.text = string.Format("Score : {0}",scoreValue);
+    public void UpdateScore(int scoreValue)
+    {
+        score.text = string.Format(Constants.Score, scoreValue);
     }
 
-    public void UpdateLives(int remainingLives) {
-        playerLives.text = string.Format("Remaining lives : {0}",remainingLives);
+    public void UpdateLives(int remainingLives)
+    {
+        playerLives.text = string.Format(Constants.Remaining_Lives, remainingLives);
     }
 
-    public void ShowPlayUI(bool value) {
+    public void ShowPlayUI(bool value)
+    {
         startUI.SetActive(!value);
         gameEndedUI.SetActive(!value);
         scoreUI.SetActive(value);
     }
 
-    public void GameEnded(int score){
+    public void GameEnded(int score)
+    {
         startUI.SetActive(false);
         scoreUI.SetActive(false);
         gameEndedUI.SetActive(true);
-        gameEndedScore.text = string.Format("Total score : {0}",score);
+        gameEndedScore.text = string.Format(Constants.Total_Score, score);
+    }
+
+    public void UpdateLevels(int level)
+    {
+        currentLevel.text = string.Format(Constants.Current_Level, level);
     }
 }

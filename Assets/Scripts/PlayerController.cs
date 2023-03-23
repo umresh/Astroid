@@ -21,18 +21,19 @@ public class PlayerController : MonoBehaviour
         rotationSpeed = playerControllerData.rotationSpeed;
         friction = playerControllerData.friction;
         acceleration = playerControllerData.acceleration;
-		
+
         Reset();
     }
 
     void Update()
     {
         float inputX = Input.GetAxis("Horizontal");
+        //Clamp the value to prevent negative values.
         float inputY = Mathf.Clamp(Input.GetAxis("Vertical"), 0, 1);
 
         transform.Rotate(0, 0, (-inputX * rotationSpeed * Time.deltaTime));
-        if (inputY != 0.0f)
-        velocity += (inputY * (transform.up * acceleration)) * Time.deltaTime;
+        if (inputY != 0.0f)     
+            velocity += (inputY * (transform.up * acceleration)) * Time.deltaTime;
 
         // apply friction to stop the ship after sometime.
         if (inputY == 0.0f)

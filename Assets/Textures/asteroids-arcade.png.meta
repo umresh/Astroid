@@ -16,7 +16,7 @@ TextureImporter:
     second: projectile
   - first:
       213: 4083586375484778724
-    second: asteroids-arcade_4
+    second: Explosion_4
   - first:
       213: 2108382336143369435
     second: asteroids-arcade_5
@@ -82,13 +82,13 @@ TextureImporter:
     second: asteroids-arcade_25
   - first:
       213: 2193853155521327980
-    second: asteroids-arcade_26
+    second: Explosion_1
   - first:
       213: -3650582016553372166
-    second: asteroids-arcade_27
+    second: Explosion_2
   - first:
       213: 2103463765087283583
-    second: asteroids-arcade_28
+    second: Explosion_3
   - first:
       213: -478626438230386829
     second: asteroids-arcade_29
@@ -361,13 +361,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: asteroids-arcade_4
+      name: Explosion_4
       rect:
         serializedVersion: 2
         x: 6
-        y: 4
+        y: 6
         width: 53
-        height: 57
+        height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -781,13 +781,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: asteroids-arcade_26
+      name: Explosion_1
       rect:
         serializedVersion: 2
-        x: 93
-        y: 93
-        width: 6
-        height: 6
+        x: 69
+        y: 69
+        width: 53
+        height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -802,13 +802,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: asteroids-arcade_27
+      name: Explosion_2
       rect:
         serializedVersion: 2
-        x: 151
-        y: 87
-        width: 16
-        height: 18
+        x: 134
+        y: 69
+        width: 53
+        height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -823,13 +823,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: asteroids-arcade_28
+      name: Explosion_3
       rect:
         serializedVersion: 2
-        x: 207
-        y: 78
-        width: 36
-        height: 34
+        x: 198
+        y: 68
+        width: 53
+        height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

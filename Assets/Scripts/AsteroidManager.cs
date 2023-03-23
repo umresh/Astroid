@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AsteroidManager : MonoBehaviour
@@ -7,14 +5,13 @@ public class AsteroidManager : MonoBehaviour
     public event System.Action<int> OnAsteroidDestroyed;
     public static event System.Action OnAstriodHitPlayer;
 
-
     public int AsteroidsRemaining
     {
-        get { return asteroids.Count; }
+        get { return asteroids; }
     }
 
     [SerializeField]
-    private GameObject asteroidPrefab;
+    private AsteroidPool asteroidPool;
 
     [SerializeField]
     private float offscreenPadding;
@@ -22,17 +19,12 @@ public class AsteroidManager : MonoBehaviour
     [SerializeField]
     private int startingAsteroidCount = 1;
 
-    public List<Asteroid> asteroids;
+    private int asteroids;
 
-    void Awake()
+    private void Start()
     {
-        Reset();
+        asteroidPool.InitializePool();
     }
-
-    // private void Start()
-    // {
-    //     Spawn(1);
-    // }
 
     public void Spawn(int level)
     {
@@ -40,20 +32,13 @@ public class AsteroidManager : MonoBehaviour
         for (int i = 0; i < numAsteroids; i++)
         {
             Vector3 pos = GetOffScreenPosition(); Quaternion rot = GetOffScreenRotation();
-            CreateAsteroid(asteroidPrefab, pos, rot, Random.Range(1, 4));
+            CreateAsteroid(pos, rot, Random.Range(1, 4));
         }
     }
 
     public void Reset()
     {
-        if (asteroids != null)
-        {
-            for (int i = 0; i < asteroids.Count; i++)
-            {
-                Destroy(asteroids[i].gameObject);
-            }
-        }
-        asteroids = new List<Asteroid>();
+        asteroidPool.ReleaseAll();
     }
 
     private Vector3 GetOffScreenPosition()
@@ -113,44 +98,52 @@ public class AsteroidManager : MonoBehaviour
         return Quaternion.Euler(new Vector3(0.0f, 0.0f, angle));
     }
 
-    private Asteroid CreateAsteroid(GameObject prefab, Vector3 position, Quaternion rotation, int category = 1)
+    private Asteroid CreateAsteroid(Vector3 position, Quaternion rotation, int category = 1)
     {
-        GameObject asteroidGO = Instantiate(prefab, position, rotation) as GameObject;
-        asteroidGO.transform.SetParent(gameObject.transform);
-        asteroidGO.transform.localScale = category / 3.0f * Vector3.one;
-
-        Asteroid asteroid = asteroidGO.GetComponent<Asteroid>();
-        asteroid.asteroidLevel = category;
-        asteroid.EventDie += OnAsteroidDie;
-        asteroid.OnPlayerHit += OnPlayerHit;
-
-        asteroids.Add(asteroid);
+        Asteroid asteroid = GetAsteroidFromPool(category);
+        Transform asteroidTranform = asteroid.gameObject.transform;
+        asteroidTranform.position = position;
+        asteroidTranform.rotation = rotation;
+        asteroidTranform.SetParent(gameObject.transform);
+        //Change the scale of the asteroid based on the category.
+        asteroidTranform.localScale = category / 3.0f * Vector3.one;
         return asteroid;
     }
 
-    private void OnPlayerHit(Asteroid asteroid)
+    private void OnAsteroidDie(Asteroid asteroid, int points, Vector3 position, int asteroidCategory, bool didHitPlayer)
     {
-        asteroids.Remove(asteroid);
-        OnAstriodHitPlayer?.Invoke();
-    }
+        ReturnAsteroidToPool(asteroid);
+        OnAsteroidDestroyed?.Invoke(points);
 
-    private void OnAsteroidDie(Asteroid asteroid, int points, Vector3 position, int asteroidCategory)
-    {
-        asteroids.Remove(asteroid);
+        if (didHitPlayer)
+        {
+            OnAstriodHitPlayer?.Invoke();
+            return;
+        }
 
         // create children asteroids
         for (int i = 1; i < asteroidCategory; i++)
         {
             Quaternion rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, Mathf.Floor(Random.Range(0.0f, 360.0f))));
-            CreateAsteroid(asteroidPrefab, position, rotation, (asteroidCategory - 1));
-        }
-
-        // dispatch event
-        if (OnAsteroidDestroyed != null)
-        {
-            OnAsteroidDestroyed(points);
+            CreateAsteroid(position, rotation, (asteroidCategory - 1));
         }
     }
 
+    Asteroid GetAsteroidFromPool(int asteroidLevel)
+    {
+        GameObject asteroidGO = asteroidPool.GetGameObject();
+        Asteroid asteroid = asteroidGO.GetComponent<Asteroid>();
+        //Determines the speed AND health.[TODO] Change it when adding improvements
+        asteroid.asteroidLevel = asteroidLevel;
+        asteroid.EventDie += OnAsteroidDie;
+        asteroids++;
+        return asteroid;
+    }
 
+    void ReturnAsteroidToPool(Asteroid asteroid)
+    {
+        asteroids--;
+        asteroidPool.ReleaseObject(asteroid.gameObject);
+        asteroid.EventDie -= OnAsteroidDie;
+    }
 }

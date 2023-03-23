@@ -4,9 +4,8 @@ public class Bullet : WrapPlayableArea
 {
     public delegate int OnAstroidHit();
     public static OnAstroidHit onAstroidHit;
-
+    public int damage;
     private BulletsPool bulletPool;
-    private int damage;
     private float force = 3;
 
     public void Init(BulletsPool pool, int damageValue, Transform playerTransform, float speed)

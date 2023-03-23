@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
         get { return instance; }
     }
 
-    public event Action<bool> GameStarted;    
+    public event Action OnFireWeapon;
 
     [Header("ScriptableObjects")]
     [SerializeField]
@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     private int level = 1;
 
     bool isPlaying = false;
+    bool enableInputs = false;
 
     public int Lives
     {
@@ -75,16 +76,19 @@ public class GameManager : MonoBehaviour
     {
         isPlaying = false;
         startingLives = playerDataSO.playerLives;
-        GameStarted?.Invoke(isPlaying);
+        enableInputs = true;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (isPlaying) return;
+        if (!enableInputs) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            StartPressed();
+            if (isPlaying)
+                OnFireWeapon?.Invoke();
+            else
+                StartPressed();
         }
     }
 
@@ -102,7 +106,6 @@ public class GameManager : MonoBehaviour
         ResetGame();
         asteroidManager.Spawn(level);
         SpawnPlayer();
-        GameStarted?.Invoke(isPlaying);
     }
 
     public void ResetGame()
@@ -112,8 +115,13 @@ public class GameManager : MonoBehaviour
 
         level = 1;
         asteroidManager.Reset();
+        ResetUI();
+    }
+    private void ResetUI()
+    {
         uiManager.UpdateLives(Lives);
         uiManager.UpdateScore(Points);
+        UpdateLevel();
     }
 
     private void OnLevelPoints(int points)
@@ -138,9 +146,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlaySFX(audioFilesSO.gameEnded);
             uiManager.GameEnded(Points);
             isPlaying = false;
-            GameStarted?.Invoke(isPlaying);
+            enableInputs = false;
+            StartCoroutine(EnableInputs());
         }
     }
 
@@ -149,9 +159,21 @@ public class GameManager : MonoBehaviour
         player.Spawn();
     }
 
+    private void UpdateLevel()
+    {
+        uiManager.UpdateLevels(level);
+    }
+
     IEnumerator StartNextLevel()
     {
         yield return new WaitForSeconds(1);
+        UpdateLevel();
         asteroidManager.Spawn(level);
+    }
+
+    IEnumerator EnableInputs()
+    {
+        yield return new WaitForSeconds(2);
+        enableInputs = true;
     }
 }

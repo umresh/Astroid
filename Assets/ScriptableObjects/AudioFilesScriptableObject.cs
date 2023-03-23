@@ -6,4 +6,5 @@ public class AudioFilesScriptableObject : ScriptableObject {
 	public AudioClip asteroidDestroy;
 	public AudioClip playerExplode;
 	public AudioClip backgroundMusic;
+	public AudioClip gameEnded;
 }

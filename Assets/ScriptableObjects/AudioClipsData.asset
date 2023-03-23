@@ -16,3 +16,4 @@ MonoBehaviour:
   asteroidDestroy: {fileID: 8300000, guid: 960c546c97ef3ef438ba3a3c518463fa, type: 3}
   playerExplode: {fileID: 8300000, guid: df0cdccfbdb4b254ebed6848d25dcabc, type: 3}
   backgroundMusic: {fileID: 8300000, guid: 5130e26d5f5b20c4a9334577586ceed2, type: 3}
+  gameEnded: {fileID: 8300000, guid: c7eee89dd199fd84a9fef13e32846740, type: 3}
